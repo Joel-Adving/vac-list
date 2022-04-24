@@ -1,9 +1,9 @@
 import React from 'react'
-import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+import { useAuth } from '../../hooks/useAuth'
 
 export default function TopNav() {
-    const { data: session } = useSession()
+    const { user } = useAuth()
     return (
         <nav className="flex flex-col justify-between w-full max-w-5xl mx-auto my-10 font-semibold shadow md:flex-row text-text-lighter bg-background-light">
             <div className="flex flex-col items-center md:flex-row">
@@ -22,7 +22,7 @@ export default function TopNav() {
                 <Link href="#">
                     <a className="flex items-center min-h-full px-2 drop-shadow hover:bg-sky-700">Game Banned</a>
                 </Link>
-                {session && (
+                {user && (
                     <Link href="/add-suspect">
                         <a className="flex items-center min-h-full px-2 drop-shadow hover:bg-sky-700">Add Suspect</a>
                     </Link>

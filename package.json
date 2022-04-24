@@ -9,11 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@next-auth/firebase-adapter": "^0.1.2-pr.183-76202b42.8",
-    "axios": "^0.26.1",
     "firebase": "^9.6.11",
     "next": "12.1.5",
-    "next-auth": "^4.3.3",
     "react": "18.0.0",
     "react-dom": "18.0.0"
   },

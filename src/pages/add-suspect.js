@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import { getJSON } from '../util/helpers'
-import { collection, setDoc, serverTimestamp, addDoc } from 'firebase/firestore'
+import { collection, setDoc, serverTimestamp, addDoc, doc } from 'firebase/firestore'
 import { db } from '../firebase/config'
 import { API } from '../util/config'
-import { useSession } from 'next-auth/react'
+import { useAuth } from '../hooks/useAuth'
 
 export default function add() {
     const [formInput, setFormInput] = useState('')
-    const [steamId, setSteamId] = useState('')
-    const { data: session } = useSession()
+    const { user } = useAuth()
 
     const handleSubmit = async e => {
         e.preventDefault()
@@ -19,19 +18,21 @@ export default function add() {
         else id = url.split('/').at(-1)
 
         if (id > 16 && !Number.isNaN(+id)) {
-            const docRef = await addDoc(collection(db, 'steam-profiles', id), {
+            const docRef = doc(db, 'steam-profiles', id)
+            await setDoc(docRef, {
                 created: serverTimestamp(),
-                added_by: { name: session.user.name, email: session.user.email },
+                added_by: user.uid,
                 rageHack: true,
                 sus: null,
             })
         } else {
             const steam64BitId = await getJSON(`${API}/vanityurl/${id}`)
-            const docRef = await addDoc(collection(db, 'steam-profiles', steam64BitId), {
+            const docRef = doc(db, 'steam-profiles', steam64BitId)
+            await setDoc(docRef, {
                 created: serverTimestamp(),
-                added_by: session.user.email,
-                rageHack: false,
-                sus: true,
+                added_by: user.uid,
+                rageHack: true,
+                sus: null,
             })
         }
 
