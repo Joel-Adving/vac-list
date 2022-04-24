@@ -15,20 +15,4 @@ export default function App({ Component, pageProps }) {
             <Component {...pageProps} />
         </AuthContextProvider>
     )
-
-    // return (
-    //     <AuthContextProvider>
-    //         {noAuthRequired.includes(router.pathname) ? (
-    //             <>
-    //                 <Component {...pageProps} />
-    //             </>
-    //         ) : (
-    //             <ProtectedRoute>
-    //                 <Nav />
-    //                 <Component {...pageProps} />
-    //                 {width <= 768 && <MobileNav />}
-    //             </ProtectedRoute>
-    //         )}
-    //     </AuthContextProvider>
-    // )
 }

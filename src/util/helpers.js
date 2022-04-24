@@ -1,3 +1,5 @@
+import { API } from './config'
+
 export const getJSON = async function (url) {
     try {
         const res = await fetch(url)
@@ -6,4 +8,14 @@ export const getJSON = async function (url) {
     } catch (err) {
         console.log(err)
     }
+}
+
+export const getSteamProfiles = async function (id) {
+    const res = await getJSON(`${API}/profile/${id}`)
+    return res.response.players
+}
+
+export const getBanStatus = async function (ids) {
+    const res = await getJSON(`${API}/gamebans/${ids}`)
+    return res.players
 }

@@ -43,5 +43,8 @@ video {
 
 /* Components */
 
-.btn {
+/* Utility classes */
+.responsive-grid {
+    grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
+    width: 100%;
 }
