@@ -13,11 +13,16 @@ export default function Header() {
     }
 
     return (
-        <header className="p-10 bg-background-dark">
+        <header className="p-6 bg-background-dark">
             <nav className="flex items-center justify-between w-full max-w-5xl mx-auto ">
-                <Link href="/">
-                    <h2 className="text-3xl font-bold cursor-pointer text-text">VAC LIST</h2>
-                </Link>
+                <div>
+                    <Link href="/">
+                        <h2 className="text-3xl font-bold cursor-pointer text-text">VAC TRACKER</h2>
+                    </Link>
+                    <a className="text-highlight" href="https://steamcommunity.com/id/jjooeell11">
+                        created by _Oki
+                    </a>
+                </div>
                 {!user && (
                     <button className="px-3 py-[3px] text-sm text-white bg-green-bg" onClick={() => signin()}>
                         Sign in
