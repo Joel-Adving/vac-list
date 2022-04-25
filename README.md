@@ -1,4 +1,4 @@
-# vac-list - VAC TRACKER
+# VAC TRACKER - vac-list 
 
 VAC TRACKER is a web app made for tracking cheaters vac/ban statuses
 
