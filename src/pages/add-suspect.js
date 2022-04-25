@@ -7,6 +7,9 @@ import { useAuth } from '../hooks/useAuth'
 import Select from 'react-select'
 import { useRecoilState } from 'recoil'
 import { steamProfilesState } from '../atoms/steamProfilesAtom'
+import { getAuth } from 'firebase/auth'
+import { useRouter } from 'next/router'
+import { filterByState } from '../atoms/filterByAtom'
 
 export const suspectOptions = [
     { value: 'sus', label: 'Sussy player' },
@@ -20,6 +23,8 @@ export default function Add() {
     const [formError, setFormError] = useState('')
     const [loading, setLoading] = useState(false)
     const [steamProfiles, setSteamProfiles] = useRecoilState(steamProfilesState)
+    const [filter, setFilter] = useRecoilState(filterByState)
+    const router = useRouter()
 
     const formReset = () => {
         setLoading(false)
@@ -53,18 +58,25 @@ export default function Add() {
             const docRef = doc(db, 'steam-profiles', id)
             await setDoc(docRef, {
                 created: serverTimestamp(),
-                added_by: user.uid,
                 suspect_type: suspectType.value,
+                added_by: {
+                    uid: user.uid,
+                    email: user.email,
+                    photoURL: getAuth().currentUser.photoURL,
+                    name: getAuth().currentUser.displayName,
+                },
             })
             formReset()
             setSteamProfiles([])
+            setFilter('all')
+            router.push('/')
         } else {
             setLoading(true)
             const res = await getJSON(`${API}/vanityurl/${id}`)
             const docSnap = await getDoc(doc(db, 'steam-profiles', res.response.steamid))
 
             if (docSnap.exists()) {
-                formReset
+                formReset()
                 setFormError('User already in database')
                 return
             }
@@ -76,6 +88,8 @@ export default function Add() {
             })
             formReset()
             setSteamProfiles([])
+            setFilter('all')
+            router.push('/')
         }
     }
 

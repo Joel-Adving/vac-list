@@ -17,10 +17,10 @@ export default function Header() {
             <nav className="flex items-center justify-between w-full max-w-5xl mx-auto ">
                 <div>
                     <Link href="/">
-                        <h2 className="text-3xl font-bold cursor-pointer text-text">VAC TRACKER</h2>
+                        <h2 className="text-2xl font-bold cursor-pointer text-text">VAC TRACKER</h2>
                     </Link>
                     <a className="text-highlight" href="https://steamcommunity.com/id/jjooeell11">
-                        created by _Oki
+                        created by Oki
                     </a>
                 </div>
                 {!user && (
