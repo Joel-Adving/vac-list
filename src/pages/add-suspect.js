@@ -13,7 +13,7 @@ export const suspectOptions = [
     { value: 'rageHack', label: 'Rager hacker' },
 ]
 
-export default function add() {
+export default function Add() {
     const [formInput, setFormInput] = useState('')
     const [suspectType, setSuspectType] = useState(null)
     const { user } = useAuth()
