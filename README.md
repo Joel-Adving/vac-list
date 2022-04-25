@@ -1,6 +1,6 @@
 # vac-list - VAC TRACKER
 
-VAC TRACKER is a web app for adding and tracking cheaters steam ban statuses  
+VAC TRACKER is a web app made for tracking cheaters vac/ban statuses
 
 https://vac-list.vercel.app/
 
