@@ -58,7 +58,7 @@ export default function Add() {
             const docRef = doc(db, 'steam-profiles', id)
             await setDoc(docRef, {
                 created: serverTimestamp(),
-                suspect_type: suspectType.value,
+                suspect_type: suspectType?.value ?? 'sus',
                 added_by: {
                     uid: user.uid,
                     email: user.email,
@@ -83,8 +83,13 @@ export default function Add() {
             const docRef = doc(db, 'steam-profiles', res.response.steamid)
             await setDoc(docRef, {
                 created: serverTimestamp(),
-                added_by: user.uid,
-                suspect_type: suspectType.value,
+                added_by: {
+                    uid: user.uid,
+                    email: user.email,
+                    photoURL: getAuth().currentUser.photoURL,
+                    name: getAuth().currentUser.displayName,
+                },
+                suspect_type: suspectType?.value ?? 'sus',
             })
             formReset()
             setSteamProfiles([])

@@ -1,29 +1,17 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { steamProfilesState } from '../atoms/steamProfilesAtom'
 import Card from '../components/Card'
 import TopNav from '../components/layout/TopNav'
 import { useSteamProfiles } from '../hooks/useSteamProfiles'
 import { useRecoilState } from 'recoil'
-import { filterByState } from '../atoms/filterByAtom'
 import { searchUserNameState } from '../atoms/searchUsernameAtom'
+import { useFilter } from '../hooks/useFilter'
 
 export default function Home() {
     const { loading } = useSteamProfiles()
-    const [steamProfiles, setSteamProfiles] = useRecoilState(steamProfilesState)
-    const [searchUserName, setSearchUserName] = useRecoilState(searchUserNameState)
-    const [filteredProfiles, setFilteredProfiles] = useState(null)
-    const [filter, setFilter] = useRecoilState(filterByState)
-
-    useEffect(() => {
-        if (!steamProfiles) return
-        if (filter === 'all') setFilteredProfiles(steamProfiles)
-        if (filter === 'suspects')
-            setFilteredProfiles(steamProfiles.filter(acc => !acc.VACBanned && acc.NumberOfGameBans < 1))
-        if (filter === 'banned')
-            setFilteredProfiles(steamProfiles.filter(acc => acc.VACBanned || acc.NumberOfGameBans > 0))
-        if (filter === 'vac banned') setFilteredProfiles(steamProfiles.filter(acc => acc.VACBanned))
-        if (filter === 'game banned') setFilteredProfiles(steamProfiles.filter(acc => acc.NumberOfGameBans > 0))
-    }, [steamProfiles, filter])
+    const [steamProfiles] = useRecoilState(steamProfilesState)
+    const [searchUserName] = useRecoilState(searchUserNameState)
+    const { filter, filteredProfiles, setFilteredProfiles } = useFilter(steamProfiles)
 
     useEffect(() => {
         if (!searchUserName) return setFilteredProfiles(steamProfiles)

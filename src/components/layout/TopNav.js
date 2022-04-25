@@ -11,7 +11,7 @@ export default function TopNav() {
     const [searchUserName, setSearchUserName] = useRecoilState(searchUserNameState)
 
     return (
-        <nav className="flex flex-col justify-between w-full max-w-5xl mx-auto font-semibold shadow-lg  md:my-10 md:flex-row text-text-lighter bg-background-light">
+        <nav className="flex flex-col justify-between w-full max-w-5xl mx-auto font-semibold shadow-lg md:my-10 md:flex-row text-text-lighter bg-background-light">
             <div className="flex flex-col md:items-center md:flex-row">
                 <button
                     onClick={() => setFilter('all')}
@@ -46,7 +46,7 @@ export default function TopNav() {
 
                 {user && (
                     <Link href="/add-suspect">
-                        <a className="flex items-center min-h-full px-2 py-2 font-normal md:py-0 drop-shadow hover:bg-sky-700">
+                        <a className="flex items-center min-h-full px-2 py-2 font-normal text-sky-200 bg-sky-700 md:py-0 drop-shadow hover:bg-sky-600">
                             Add Suspect
                         </a>
                     </Link>
