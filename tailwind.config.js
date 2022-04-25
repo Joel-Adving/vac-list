@@ -7,6 +7,7 @@ module.exports = {
                 highlight: '#66c0f4',
                 background: '#1b2838',
                 'background-light': '#3b6390',
+                'background-lighter': '#304E6A',
                 'background-dark': '#171a21',
                 text: '#C5C3C0',
                 'text-lighter': '#D9D9D6',

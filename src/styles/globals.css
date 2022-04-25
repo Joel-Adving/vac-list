@@ -27,12 +27,7 @@ a {
 }
 
 body {
-    /* background: var(--color-background); */
     background: linear-gradient(#203355, var(--color-background));
-
-    /* background: linear-gradient(0deg, var(--color-background), #203355 100%),
-        linear-gradient(180deg, var(--color-background), #203355 100%); */
-
     min-height: 100vh;
 }
 
@@ -41,10 +36,7 @@ video {
     max-width: 100%;
 }
 
-/* Components */
-
-/* Utility classes */
 .responsive-grid {
-    grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     width: 100%;
 }

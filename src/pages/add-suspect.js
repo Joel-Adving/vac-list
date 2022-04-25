@@ -5,6 +5,8 @@ import { db } from '../firebase/config'
 import { API } from '../util/config'
 import { useAuth } from '../hooks/useAuth'
 import Select from 'react-select'
+import { useRecoilState } from 'recoil'
+import { steamProfilesState } from '../atoms/steamProfilesAtom'
 
 export const suspectOptions = [
     { value: 'sus', label: 'Sussy player' },
@@ -17,6 +19,7 @@ export default function add() {
     const { user } = useAuth()
     const [formError, setFormError] = useState('')
     const [loading, setLoading] = useState(false)
+    const [steamProfiles, setSteamProfiles] = useRecoilState(steamProfilesState)
 
     const formReset = () => {
         setLoading(false)
@@ -29,11 +32,13 @@ export default function add() {
         setFormError('')
         const url = formInput.trim()
         let id
+
         if (!url.startsWith('https://steamcommunity.com/')) {
             formReset()
             setFormError('Wrong steam profile url format, must start with https://steamcommunity.com/')
             return
         }
+
         if (url.endsWith('/')) id = url.slice(0, -1).split('/').at(-1)
         else id = url.split('/').at(-1)
 
@@ -52,10 +57,12 @@ export default function add() {
                 suspect_type: suspectType.value,
             })
             formReset()
+            setSteamProfiles([])
         } else {
             setLoading(true)
             const res = await getJSON(`${API}/vanityurl/${id}`)
             const docSnap = await getDoc(doc(db, 'steam-profiles', res.response.steamid))
+
             if (docSnap.exists()) {
                 formReset
                 setFormError('User already in database')
@@ -68,6 +75,7 @@ export default function add() {
                 suspect_type: suspectType.value,
             })
             formReset()
+            setSteamProfiles([])
         }
     }
 
