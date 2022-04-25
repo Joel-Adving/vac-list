@@ -35,8 +35,8 @@ export default function Home() {
     return (
         <div>
             <TopNav />
-            <main className="max-w-5xl mx-auto my-10 text-text-lighter">
-                <section className="grid gap-3 responsive-grid">
+            <main className="max-w-5xl mx-auto my-1 md:my-10 text-text-lighter">
+                <section className="grid gap-1 overflow-hidden md:gap-3 responsive-grid">
                     {filteredProfiles &&
                         filter !== 'all' &&
                         filteredProfiles

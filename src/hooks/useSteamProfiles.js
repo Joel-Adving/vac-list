@@ -26,7 +26,7 @@ export const useSteamProfiles = () => {
                 ...steamProfiles.find(el => el.steamid === docs[i].id),
                 ...banStatus.find(el => el.SteamId === docs[i].id),
             }))
-            console.log(merged)
+
             setSteamProfiles(merged)
             setLoading(false)
         })

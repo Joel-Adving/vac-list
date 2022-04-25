@@ -29,14 +29,19 @@ export default function Header() {
                     </button>
                 )}
                 {user && (
-                    <div className="flex items-center bg-background">
-                        <img
-                            className="border-r-2 border-highlight w-7 h-7"
-                            src={user.photoURL}
-                            alt="User profile image"
-                        />
-                        <h3 className="mx-3 text-md text-highlight">{user.name}</h3>
-                        <button className="px-4 py-[3px] text-sm text-white bg-green-bg" onClick={handleLogout}>
+                    <div className="flex flex-col sm:flex-row">
+                        <div className="flex items-center bg-background">
+                            <img
+                                className="border-r-2 border-highlight w-7 h-7"
+                                src={user.photoURL}
+                                alt="User profile image"
+                            />
+                            <h3 className="mx-3 text-md text-highlight">{user.name}</h3>
+                        </div>
+                        <button
+                            className="px-4 py-[3px] text-sm text-white bg-green-bg min-w-max"
+                            onClick={handleLogout}
+                        >
                             Sign Out
                         </button>
                     </div>
