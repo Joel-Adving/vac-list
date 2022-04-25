@@ -38,16 +38,18 @@ export default function SteamProfile() {
     return (
         <div className="flex flex-col w-full max-w-5xl min-h-screen p-4 mx-auto bg-gray-800 text-stone-400">
             {profile && (
-                <div className="flex flex-col gap-3 md:flex-row">
-                    <div className="flex flex-grow p-3 mt-1 ml-1">
+                <div className="flex flex-col gap-3 md:flex-row max-w">
+                    <div className="flex flex-col flex-grow mt-1 ml-1 sm:p-3 sm:flex-row">
                         <img
-                            className="max-h-full border-[2.5px] border-stone-500"
+                            className=" border-[2.5px] border-stone-500  max-w-fit"
                             src={profile.avatarfull}
                             alt="avatar"
                         />
-                        <div className="flex flex-col ml-5">
+                        <div className="flex flex-col sm:ml-5">
                             <div>
-                                <h2 className="mt-1 mr-3 text-2xl text-zinc-100">{profile.personaname}</h2>
+                                <h2 className="my-5 mr-3 text-2xl sm:my-0 sm:mt-1 text-zinc-100">
+                                    {profile.personaname}
+                                </h2>
                                 <div className="flex items-center text-sm ">
                                     <p>{profile?.realname ?? ''}</p>
                                     {profile.loccountrycode && (
@@ -62,23 +64,23 @@ export default function SteamProfile() {
                                     )}
                                 </div>
                             </div>
-                            <a href={profile.profileurl} className="text-sm mt-11 ">
+                            <a href={profile.profileurl} className="text-sm break-words sm:mt-11">
                                 {profile.profileurl}
                             </a>
                         </div>
                     </div>
-                    <div className="flex flex-col flex-grow max-w-xs p-4 ml-0 text-zinc-100">
+                    {/* <div className="flex flex-col flex-grow max-w-xs p-4 ml-0 text-zinc-100">
                         {profile.timecreated && (
                             <>
                                 <p>Account created</p>
                                 <p>{profile.timecreated && timeAgo.format(new Date(profile?.timecreated * 1000))}</p>
                             </>
                         )}
-                    </div>
+                    </div> */}
                 </div>
             )}
             {profile && (
-                <div className="flex flex-col gap-3 mt-7 md:flex-row">
+                <div className="flex flex-col-reverse gap-3 mt-7 sm:flex-row">
                     <div className="flex flex-col flex-grow gap-2 p-4 rounded bg-background-dark">
                         {profile.timecreated && (
                             <p>
@@ -117,7 +119,7 @@ export default function SteamProfile() {
                             {profile.suspect_type === 'sus' ? 'Very suspicious' : 'Rage hacker'}
                         </p>
                     </div>
-                    <div className="flex flex-col flex-grow max-w-xs gap-2 p-5 rounded bg-background-dark">
+                    <div className="flex flex-col flex-grow max-w-xs min-w-full gap-2 p-5 rounded sm:min-w-0 bg-background-dark">
                         <div>
                             {profile.VACBanned && <p className="text-red-500 ">VAC BANNED</p>}
                             {profile.NumberOfGameBans > 0 && <p className="text-red-500">GAME BANNED</p>}

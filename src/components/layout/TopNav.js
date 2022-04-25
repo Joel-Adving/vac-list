@@ -15,9 +15,9 @@ export default function TopNav() {
             <div className="flex flex-col md:items-center md:flex-row">
                 <button
                     onClick={() => setFilter('all')}
-                    className="flex items-center min-h-full px-2 py-2 md:py-0 drop-shadow hover:bg-sky-700"
+                    className="flex items-center min-h-full px-2 py-2 pl-3 md:py-0 drop-shadow hover:bg-sky-700"
                 >
-                    Show All
+                    All
                 </button>
                 <button
                     onClick={() => setFilter('banned')}
