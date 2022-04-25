@@ -14,7 +14,12 @@ const firebaseConfig = {
 }
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
+const db = getFirestore()
+const auth = getAuth()
+let analytics
 
-export const db = getFirestore()
-export const auth = getAuth()
-export const analytics = getAnalytics(app)
+if (app.name && typeof window !== 'undefined') {
+    analytics = getAnalytics(app)
+}
+
+export { analytics, db, auth }
