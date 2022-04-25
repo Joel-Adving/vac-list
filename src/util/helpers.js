@@ -19,3 +19,8 @@ export const getBanStatus = async function (ids) {
     const res = await getJSON(`${API}/gamebans/${ids}`)
     return res.players
 }
+
+export const getCsgoStats = async function (id) {
+    const res = await getJSON(`${API}/csgostats/${id}`)
+    return res
+}
