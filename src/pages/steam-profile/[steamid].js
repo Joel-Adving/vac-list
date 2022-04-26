@@ -26,7 +26,7 @@ export default function SteamProfile() {
     useEffect(() => {
         if (!steamid) return
         getProfile()
-    }, [])
+    }, [user])
 
     const getProfile = async () => {
         const docRef = doc(db, 'steam-profiles', steamid)
@@ -44,7 +44,7 @@ export default function SteamProfile() {
             ...banStatus[0],
         }
         setProfile(merged)
-        setshowDel(user.uid === dbProfile.added_by.uid || user.uid === 'ZwA7YpCdqmNa7N5bozjhAjUiJMC2')
+        setshowDel(user?.uid === dbProfile.added_by.uid || user?.uid === 'ZwA7YpCdqmNa7N5bozjhAjUiJMC2')
     }
 
     const handleDelete = async () => {
