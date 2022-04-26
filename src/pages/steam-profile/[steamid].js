@@ -1,16 +1,27 @@
 import { useRouter } from 'next/router'
-import { doc, getDoc } from 'firebase/firestore'
+import { deleteDoc, doc, getDoc } from 'firebase/firestore'
 import { useState, useEffect } from 'react'
 import { getBanStatus, getCsgoStats, getSteamProfiles } from '../../util/helpers'
 import { db } from '../../firebase/config'
 import { timeAgo } from '../../util/timeAgo'
 import countries from 'i18n-iso-countries'
+import Modal from '../../components/Modal'
+import { steamProfilesState } from '../../atoms/steamProfilesAtom'
+import { filterByState } from '../../atoms/filterByAtom'
+import { useRecoilState } from 'recoil'
+import { useAuth } from '../../hooks/useAuth'
+
 countries.registerLocale(require('i18n-iso-countries/langs/en.json'))
 
 export default function SteamProfile() {
     const router = useRouter()
     const { steamid } = router.query
     const [profile, setProfile] = useState(null)
+    const [showModal, setShowModal] = useState(false)
+    const [steamProfiles, setSteamProfiles] = useRecoilState(steamProfilesState)
+    const [filter, setFilter] = useRecoilState(filterByState)
+    const { user } = useAuth()
+    const [showDel, setshowDel] = useState(false)
 
     useEffect(() => {
         if (!steamid) return
@@ -32,14 +43,33 @@ export default function SteamProfile() {
             ...steamProfiles[0],
             ...banStatus[0],
         }
-        console.log(merged)
         setProfile(merged)
+        setshowDel(user.uid === dbProfile.added_by.uid || user.uid === 'ZwA7YpCdqmNa7N5bozjhAjUiJMC2')
     }
+
+    const handleDelete = async () => {
+        if (!showDel) return
+        const docRef = doc(db, `/steam-profiles/${steamid}`)
+        await deleteDoc(docRef)
+        setShowModal(!showModal)
+        setSteamProfiles([])
+        setFilter('all')
+        router.push('/')
+    }
+
     return (
         <div className="flex flex-col w-full max-w-5xl min-h-screen p-4 mx-auto bg-gray-800 text-stone-400">
+            {showModal && (
+                <Modal
+                    text={'Are you sure you want to remove the suspect?'}
+                    showModal={showModal}
+                    setShowModal={setShowModal}
+                    handleDelete={handleDelete}
+                />
+            )}
             {profile && (
                 <div className="flex flex-col gap-3 md:flex-row max-w">
-                    <div className="flex flex-col flex-grow mt-1 ml-1 sm:p-3 sm:flex-row">
+                    <div className="flex flex-col flex-grow mt-1 ml-1 sm:p-3 sm:flex-row  max-w-[655px]">
                         <img
                             className=" border-[2.5px] border-stone-500  max-w-fit"
                             src={profile.avatarfull}
@@ -69,14 +99,19 @@ export default function SteamProfile() {
                             </a>
                         </div>
                     </div>
-                    {/* <div className="flex flex-col flex-grow max-w-xs p-4 ml-0 text-zinc-100">
-                        {profile.timecreated && (
-                            <>
-                                <p>Account created</p>
-                                <p>{profile.timecreated && timeAgo.format(new Date(profile?.timecreated * 1000))}</p>
-                            </>
-                        )}
-                    </div> */}
+                    <div className="flex items-center flex-grow max-w-sm pl-1 mt-1 md:pt-4 md:items-start md:flex-col text-zinc-100 ">
+                        <div className="flex items-center md:mb-3 max-w-max">
+                            <h3 className="mr-2 text-md">{profile.added_by.name.split(' ')[0]}</h3>
+                            <img
+                                className="w-9 h-9 rounded-full border-2 p-[1px] border-red-500 mr-2"
+                                src={profile.added_by.photoURL}
+                                alt="User profile image"
+                            />
+                        </div>
+                        <p className="text-sm text-zinc-500">
+                            Submitted {timeAgo.format(new Date(profile.created.seconds * 1000))}
+                        </p>
+                    </div>
                 </div>
             )}
             {profile && (
@@ -118,6 +153,15 @@ export default function SteamProfile() {
                             <span className="text-zinc-100">Reason for adding: </span>
                             {profile.suspect_type === 'sus' ? 'Very suspicious' : 'Rage hacker'}
                         </p>
+
+                        {showDel && (
+                            <button
+                                className="p-2 mt-3 text-zinc-100 border-[1px] border-zinc-100"
+                                onClick={() => setShowModal(!showModal)}
+                            >
+                                Remove Suspect
+                            </button>
+                        )}
                     </div>
                     <div className="flex flex-col flex-grow max-w-xs min-w-full gap-2 p-5 rounded sm:min-w-0 bg-background-dark">
                         <div>

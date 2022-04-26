@@ -2,10 +2,10 @@ import { collection, query, where, getDocs, updateDoc } from 'firebase/firestore
 import { useEffect } from 'react'
 import { db } from '../firebase/config'
 
-export default function SignIn() {
-    useEffect(() => {
-        // updateProfiles()
-    }, [])
+export default function Test() {
+    // useEffect(() => {
+    //     updateProfiles()
+    // }, [])
 
     // const updateProfiles = async () => {
     //     const q = query(collection(db, 'steam-profiles'))
