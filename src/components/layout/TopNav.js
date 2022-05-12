@@ -6,7 +6,7 @@ import { filterByState } from '../../atoms/filterByAtom'
 import { searchUserNameState } from '../../atoms/searchUsernameAtom'
 
 export default function TopNav() {
-    const { user } = useAuth()
+    const { user, signin } = useAuth()
     const [filter, setFilter] = useRecoilState(filterByState)
     const [searchUserName, setSearchUserName] = useRecoilState(searchUserNameState)
 
@@ -15,7 +15,7 @@ export default function TopNav() {
             <div className="flex flex-col md:items-center md:flex-row">
                 <button
                     onClick={() => setFilter('all')}
-                    className="flex items-center min-h-full px-2 py-2 pl-3 md:py-0 drop-shadow hover:bg-sky-700"
+                    className="flex items-center min-h-full px-2 py-2 md:pl-4 md:py-0 drop-shadow hover:bg-sky-700"
                 >
                     All
                 </button>
@@ -44,16 +44,23 @@ export default function TopNav() {
                     Game Banned
                 </button>
 
-                {user && (
+                {user ? (
                     <Link href="/add-suspect">
                         <a className="flex items-center min-h-full px-2 py-2 font-normal text-sky-200 bg-sky-700 md:py-0 drop-shadow hover:bg-sky-600">
                             Add Suspect
                         </a>
                     </Link>
+                ) : (
+                    <button
+                        onClick={() => signin()}
+                        className="flex items-center min-h-full px-2 py-2 font-normal text-sky-200 bg-sky-700 md:py-0 drop-shadow hover:bg-sky-600"
+                    >
+                        Add Suspect
+                    </button>
                 )}
             </div>
             <input
-                className="px-4 py-0.5 rounded-sm border-background bg-input-bg border-[1px] m-1"
+                className="px-4 py-2 md:py-0.5 rounded-sm border-background bg-input-bg border-[1px] m-1"
                 type="text"
                 value={searchUserName}
                 onChange={e => setSearchUserName(e.target.value)}

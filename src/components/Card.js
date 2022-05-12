@@ -5,11 +5,11 @@ import Link from 'next/link'
 export default function Card({ profile }) {
     return (
         <Link href={`/steam-profile/${profile.steamid}`}>
-            <div className="flex flex-col shadow-2xl cursor-pointer max-w-screen sm:w-full bg-background sm:flex-row">
+            <div className="flex flex-col p-4 shadow-2xl cursor-pointer bg-background sm:flex-row">
                 <img className="" src={profile.avatarfull} alt="avatar" />
-                <div className="flex flex-col justify-between flex-1 p-4 space-y-5 sm:space-y-0">
-                    <h2 className="text-2xl text-highlight">{profile.personaname}</h2>
-                    <div>
+                <div className="flex flex-col justify-between flex-1 p-2 space-y-5 sm:p-3 sm:space-y-0">
+                    <h2 className="mt-1 text-4xl sm:text-2xl sm:mt-0 text-highlight">{profile.personaname}</h2>
+                    <div className="text-xl sm:text-lg">
                         {profile.VACBanned && <p className="text-red-500 ">VAC BANNED</p>}
                         {profile.NumberOfGameBans > 0 && <p className="text-red-500">GAME BANNED</p>}
                         {profile.DaysSinceLastBan > 0 && (
