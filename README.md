@@ -1,10 +1,10 @@
-# VAC TRACKER || vac-list 
+## VAC TRACKER || vac-list 
 
 VAC TRACKER is a web app made for tracking cheaters vac/ban statuses
 
 https://vac-list.vercel.app/
 
-# Architecture / Tech Stack
+## Architecture / Tech Stack
 
 Next.JS, Firebase, Recoil, Tailwind CSS
 
