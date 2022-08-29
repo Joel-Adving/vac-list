@@ -43,5 +43,5 @@ img {
   max-height: 100%;
   width: auto;
   height: auto;
-  aspect-ratio: 4 / 4;
+  /* aspect-ratio: 4 / 4; */
 }
