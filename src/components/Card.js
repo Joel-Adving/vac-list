@@ -5,7 +5,7 @@ import Link from 'next/link'
 export default function Card({ profile }) {
   return (
     <Link href={`/steam-profile/${profile.steamid}`}>
-      <div className="flex flex-col p-4 shadow-2xl cursor-pointer bg-background sm:flex-row">
+      <div className="flex flex-col p-4 shadow-2xl cursor-pointer bg-background sm:flex-row max-h-[40rem] h-full sm:min-h-[15rem] ">
         <img src={profile.avatarfull} alt="avatar" />
 
         <div className="flex flex-col justify-between flex-1 p-2 space-y-5 sm:p-3 sm:space-y-0">
