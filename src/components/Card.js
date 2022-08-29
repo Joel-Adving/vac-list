@@ -5,11 +5,10 @@ import Link from 'next/link'
 export default function Card({ profile }) {
   return (
     <Link href={`/steam-profile/${profile.steamid}`}>
-      <div className="flex flex-col p-4 shadow-2xl cursor-pointer bg-background sm:flex-row max-h-[40rem] h-full sm:min-h-[15rem] ">
-        <img src={profile.avatarfull} alt="avatar" />
-
+      <div className="flex flex-col h-full p-4 shadow-2xl cursor-pointer bg-background sm:flex-row">
+        <img className="w-auto h-full min-h-full" src={profile.avatarfull} alt="avatar" />
         <div className="flex flex-col justify-between flex-1 p-2 space-y-5 sm:p-3 sm:space-y-0">
-          <h2 style={{ wordBreak: 'break-all' }} className="max-w-md mt-1 text-4xl sm:text-2xl sm:mt-0 text-highlight">
+          <h2 style={{ wordBreak: 'break-all' }} className="mt-1 text-4xl sm:text-2xl sm:mt-0 text-highlight">
             {profile.personaname}
           </h2>
           <div className="text-xl sm:text-lg">
