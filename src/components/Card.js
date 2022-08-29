@@ -6,7 +6,7 @@ export default function Card({ profile }) {
   return (
     <Link href={`/steam-profile/${profile.steamid}`}>
       <div className="flex flex-col p-4 shadow-2xl cursor-pointer bg-background sm:flex-row">
-        <img className="" src={profile.avatarfull} alt="avatar" />
+        <img className="min-h-full" height="100%" src={profile.avatarfull} alt="avatar" />
         <div className="flex flex-col justify-between flex-1 p-2 space-y-5 sm:p-3 sm:space-y-0">
           <h2 style={{ wordBreak: 'break-all' }} className="max-w-md mt-1 text-4xl sm:text-2xl sm:mt-0 text-highlight">
             {profile.personaname}
