@@ -26,8 +26,9 @@ export default function Header() {
           <div className="flex flex-col sm:flex-row">
             <div className="flex items-center bg-background">
               <Image
-                width={28}
-                height={28}
+                priority
+                width={40}
+                height={40}
                 className="border-r-2 border-highlight w-7 h-7"
                 src={user.photoURL}
                 alt="User profile image"
