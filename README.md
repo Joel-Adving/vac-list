@@ -2,7 +2,7 @@
 
 VAC TRACKER is a web app made for tracking cheaters vac/ban statuses
 
-https://vac-list.vercel.app/
+https://vac-tracker.vercel.app/
 
 ## Architecture / Tech Stack
 
