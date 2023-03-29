@@ -1,6 +1,6 @@
 ## VAC TRACKER
 
-VAC TRACKER is a app for tracking VAC and game ban statuses of steam profiles
+VAC TRACKER is a app where you can add suspects and tracking their VAC and game ban statuses of steam profiles
 
 https://vac-tracker.vercel.app/
 
