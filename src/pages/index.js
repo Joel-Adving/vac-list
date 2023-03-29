@@ -20,9 +20,9 @@ export default function Home() {
               filteredProfiles
                 .slice()
                 .sort((a, b) => a?.DaysSinceLastBan - b?.DaysSinceLastBan)
-                .map(profile => <Card key={profile.steamid} profile={profile} />)}
+                .map((profile) => <Card key={profile.steamid} profile={profile} />)}
 
-            {filter === 'all' && filteredProfiles.map(profile => <Card key={profile.steamid} profile={profile} />)}
+            {filter === 'all' && filteredProfiles.map((profile) => <Card key={profile.steamid} profile={profile} />)}
           </section>
         )}
 
