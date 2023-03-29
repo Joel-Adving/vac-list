@@ -1,6 +1,6 @@
 ## VAC Tracker
 
-VAC Tracker is a app where you can add suspects and track their VAC and game ban statuses of steam profiles
+VAC Tracker is a app where you can add cheater/suspect steam profiles, and then track their VAC and game ban statuses.
 
 https://vac-tracker.vercel.app/
 
