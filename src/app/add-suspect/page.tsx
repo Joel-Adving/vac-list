@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 import { filterByState } from '@/atoms/filterByAtom'
 import { useAuth } from '@/context/AuthContext'
 
-export const suspectOptions = [
+const suspectOptions = [
   { value: 'sus', label: 'Sussy player' },
   { value: 'rageHack', label: 'Rager hacker' }
 ]
