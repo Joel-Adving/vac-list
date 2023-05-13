@@ -1,13 +1,15 @@
-import React, { useEffect } from 'react'
+'use client'
+
+import React from 'react'
 import Link from 'next/link'
-import { useAuth } from '../../hooks/useAuth'
-import { useRecoilState } from 'recoil'
-import { filterByState } from '../../atoms/filterByAtom'
-import { searchUserNameState } from '../../atoms/searchUsernameAtom'
+import { useRecoilState, useSetRecoilState } from 'recoil'
+import { filterByState } from '../atoms/filterByAtom'
+import { searchUserNameState } from '../atoms/searchUsernameAtom'
+import { useAuth } from '@/context/AuthContext'
 
 export default function TopNav() {
   const { user, signin } = useAuth()
-  const [filter, setFilter] = useRecoilState(filterByState)
+  const setFilter = useSetRecoilState(filterByState)
   const [searchUserName, setSearchUserName] = useRecoilState(searchUserNameState)
 
   return (
@@ -44,21 +46,12 @@ export default function TopNav() {
           Game Banned
         </button>
 
-        {user ? (
-          <Link
-            href="/add-suspect"
-            className="flex items-center min-h-full px-2 py-2 font-normal text-sky-200 bg-sky-700 md:py-0 drop-shadow hover:bg-sky-600"
-          >
-            Add Suspect
-          </Link>
-        ) : (
-          <button
-            onClick={() => signin()}
-            className="flex items-center min-h-full px-2 py-2 font-normal text-sky-200 bg-sky-700 md:py-0 drop-shadow hover:bg-sky-600"
-          >
-            Add Suspect
-          </button>
-        )}
+        <Link
+          href="/add-suspect"
+          className="flex items-center min-h-full px-2 py-2 font-normal text-sky-200 bg-sky-700 md:py-0 drop-shadow hover:bg-sky-600"
+        >
+          Add Suspect
+        </Link>
       </div>
       <input
         className="px-4 py-2 md:py-0.5 rounded-sm border-background bg-input-bg border-[1px] m-1"

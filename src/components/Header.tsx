@@ -1,7 +1,9 @@
+'use client'
+
 import React from 'react'
-import { useAuth } from '../../hooks/useAuth'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useAuth } from '@/context/AuthContext'
 
 export default function Header() {
   const { user, signin, logout } = useAuth()
@@ -17,12 +19,8 @@ export default function Header() {
             created by Oki
           </a>
         </div>
-        {!user && (
-          <button className="px-3 py-[3px] text-sm text-white bg-green-bg" onClick={() => signin()}>
-            Sign in
-          </button>
-        )}
-        {user && (
+
+        {user ? (
           <div className="flex flex-col sm:flex-row">
             <div className="flex items-center bg-background">
               <Image
@@ -39,6 +37,10 @@ export default function Header() {
               Sign Out
             </button>
           </div>
+        ) : (
+          <button className="px-3 py-[3px] text-sm text-white bg-green-bg" onClick={() => signin()}>
+            Sign in
+          </button>
         )}
       </nav>
     </header>

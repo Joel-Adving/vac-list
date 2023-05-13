@@ -1,52 +1,51 @@
-import { useRouter } from 'next/router'
+'use client'
+
 import { deleteDoc, doc, getDoc } from 'firebase/firestore'
 import { useState, useEffect } from 'react'
-import { getBanStatus, getCsgoStats, getSteamProfiles } from '../../util/helpers'
-import { db } from '../../firebase/config'
-import { timeAgo } from '../../util/timeAgo'
+import { getBanStatus, getCsgoStats, getSteamProfiles } from '@/utils/helpers'
+import { db } from '@/firebase/config'
+import { timeAgo } from '@/utils/timeAgo'
 import countries from 'i18n-iso-countries'
-import Modal from '../../components/Modal'
-import { steamProfilesState } from '../../atoms/steamProfilesAtom'
-import { filterByState } from '../../atoms/filterByAtom'
-import { useRecoilState } from 'recoil'
-import { useAuth } from '../../hooks/useAuth'
+import Modal from '@/components/Modal'
+import { steamProfilesState } from '@/atoms/steamProfilesAtom'
+import { filterByState } from '@/atoms/filterByAtom'
+import { useSetRecoilState } from 'recoil'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/context/AuthContext'
 
-countries.registerLocale(require('i18n-iso-countries/langs/en.json'))
-
-export default function SteamProfile() {
+export default function SteamProfile({ params }: { params: { steamid: string } }) {
   const router = useRouter()
-  const { steamid } = router.query
-  const [profile, setProfile] = useState(null)
+  const { steamid } = params
+  const [profile, setProfile] = useState<any>(null)
   const [showModal, setShowModal] = useState(false)
-  const [steamProfiles, setSteamProfiles] = useRecoilState(steamProfilesState)
-  const [filter, setFilter] = useRecoilState(filterByState)
+  const setSteamProfiles = useSetRecoilState(steamProfilesState)
+  const setFilter = useSetRecoilState<any>(filterByState)
   const { user } = useAuth()
   const [showDel, setshowDel] = useState(false)
 
   useEffect(() => {
     if (!steamid) return
-    getProfile()
-  }, [user])
+    const getProfile = async () => {
+      const docRef = doc(db, 'steam-profiles', steamid as string)
+      const docSnap = await getDoc(docRef)
+      if (!docSnap.exists()) return
+      const dbProfile: any = { ...docSnap.data(), id: docSnap.id }
+      const steamProfiles = await getSteamProfiles(steamid)
+      const banStatus = await getBanStatus(steamid)
+      const csgoStats = await getCsgoStats(steamid)
 
-  const getProfile = async () => {
-    const docRef = doc(db, 'steam-profiles', steamid)
-    const docSnap = await getDoc(docRef)
-    if (!docSnap.exists()) return
-    const dbProfile = { ...docSnap.data(), id: docSnap.id }
-    const steamProfiles = await getSteamProfiles(steamid)
-    const banStatus = await getBanStatus(steamid)
-    const csgoStats = await getCsgoStats(steamid)
-
-    const merged = {
-      ...dbProfile,
-      ...csgoStats,
-      ...steamProfiles[0],
-      ...banStatus[0]
+      const merged = {
+        ...dbProfile,
+        ...csgoStats,
+        ...steamProfiles[0],
+        ...banStatus[0]
+      }
+      setProfile(merged)
+      setshowDel(user?.uid === dbProfile.added_by.uid || user?.uid === 'ZwA7YpCdqmNa7N5bozjhAjUiJMC2')
     }
-    setProfile(merged)
-    setshowDel(user?.uid === dbProfile.added_by.uid || user?.uid === 'ZwA7YpCdqmNa7N5bozjhAjUiJMC2')
-  }
+    getProfile()
+  }, [steamid, user])
 
   const handleDelete = async () => {
     if (!showDel) return
@@ -145,7 +144,10 @@ export default function SteamProfile() {
                 </p>
                 <p>
                   <span className="text-zinc-100">HS: </span>
-                  {(profile?.playerstats?.stats[25]?.value / profile?.playerstats?.stats[0]?.value).toFixed(2) * 100}%
+                  {(
+                    ((profile?.playerstats?.stats[25]?.value as any) / profile?.playerstats?.stats[0]?.value) as any
+                  ).toFixed(2) * 100}
+                  %
                 </p>
               </>
             )}

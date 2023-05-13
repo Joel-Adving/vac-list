@@ -1,15 +1,16 @@
+'use client'
+
 import React, { useState } from 'react'
-import { getJSON } from '../util/helpers'
+import { getJSON } from '@/utils/helpers'
 import { setDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore'
-import { db } from '../firebase/config'
-import { API } from '../util/config'
-import { useAuth } from '../hooks/useAuth'
+import { db } from '@/firebase/config'
 import Select from 'react-select'
-import { useRecoilState } from 'recoil'
-import { steamProfilesState } from '../atoms/steamProfilesAtom'
+import { useSetRecoilState } from 'recoil'
+import { steamProfilesState } from '@/atoms/steamProfilesAtom'
 import { getAuth } from 'firebase/auth'
-import { useRouter } from 'next/router'
-import { filterByState } from '../atoms/filterByAtom'
+import { useRouter } from 'next/navigation'
+import { filterByState } from '@/atoms/filterByAtom'
+import { useAuth } from '@/context/AuthContext'
 
 export const suspectOptions = [
   { value: 'sus', label: 'Sussy player' },
@@ -18,12 +19,12 @@ export const suspectOptions = [
 
 export default function Add() {
   const [formInput, setFormInput] = useState('')
-  const [suspectType, setSuspectType] = useState(null)
-  const { user } = useAuth()
+  const [suspectType, setSuspectType] = useState<any>(null)
+  const { user, signin } = useAuth()
   const [formError, setFormError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [steamProfiles, setSteamProfiles] = useRecoilState(steamProfilesState)
-  const [filter, setFilter] = useRecoilState(filterByState)
+  const setSteamProfiles = useSetRecoilState(steamProfilesState)
+  const setFilter = useSetRecoilState(filterByState)
   const router = useRouter()
 
   const formReset = () => {
@@ -32,11 +33,11 @@ export default function Add() {
     setSuspectType(null)
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setFormError('')
     const url = formInput.trim()
-    let id
+    let id: any
 
     if (!url.startsWith('https://steamcommunity.com/')) {
       formReset()
@@ -62,8 +63,8 @@ export default function Add() {
         added_by: {
           uid: user.uid,
           email: user.email,
-          photoURL: getAuth().currentUser.photoURL,
-          name: getAuth().currentUser.displayName
+          photoURL: getAuth().currentUser?.photoURL,
+          name: getAuth().currentUser?.displayName
         }
       })
       formReset()
@@ -72,7 +73,7 @@ export default function Add() {
       router.push('/')
     } else {
       setLoading(true)
-      const res = await getJSON(`${API}/vanityurl/${id}`)
+      const res = await getJSON(`${process.env.NEXT_PUBLIC_STEAM_API_URL}/vanityurl/${id}`)
       const docSnap = await getDoc(doc(db, 'steam-profiles', res.response.steamid))
 
       if (docSnap.exists()) {
@@ -86,8 +87,8 @@ export default function Add() {
         added_by: {
           uid: user.uid,
           email: user.email,
-          photoURL: getAuth().currentUser.photoURL,
-          name: getAuth().currentUser.displayName
+          photoURL: getAuth().currentUser?.photoURL,
+          name: getAuth().currentUser?.displayName
         },
         suspect_type: suspectType?.value ?? 'sus'
       })
@@ -98,7 +99,7 @@ export default function Add() {
     }
   }
 
-  return (
+  return user ? (
     <div className="grid place-content-center">
       <form className="flex flex-col w-screen max-w-xl mt-10 shadow p-7 text-text bg-background" onSubmit={handleSubmit}>
         <h1 className="mb-6 text-3xl font-semibold">Add Suspected Cheater</h1>
@@ -130,6 +131,13 @@ export default function Add() {
           </button>
         )}
       </form>
+    </div>
+  ) : (
+    <div className="grid place-content-center h-[70vh] gap-6">
+      <h1 className="text-3xl text-white ">Sign in to add a suspect</h1>
+      <button className="px-6 py-2 mx-auto text-sm text-white bg-green-bg w-fit" onClick={() => signin()}>
+        Sign in
+      </button>
     </div>
   )
 }

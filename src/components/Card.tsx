@@ -1,9 +1,11 @@
+'use client'
+
 import React from 'react'
-import { timeAgo } from '../util/timeAgo'
+import { timeAgo } from '../utils/timeAgo'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export default function Card({ profile }) {
+export default function Card({ profile }: { profile: any }) {
   return (
     <Link href={`/steam-profile/${profile.steamid}`} passHref>
       <div className="flex flex-col h-full p-4 shadow-2xl cursor-pointer bg-background sm:flex-row">
