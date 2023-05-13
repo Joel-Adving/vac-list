@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { query, collection, orderBy, onSnapshot } from 'firebase/firestore'
-import { db } from '../firebase/config'
-import { getBanStatus, getSteamProfiles } from '../utils/helpers'
+import { db } from '@/firebase/config'
+import { getBanStatus, getSteamProfiles } from '@/utils/helpers'
 import { useRecoilState } from 'recoil'
-import { steamProfilesState } from '../atoms/steamProfilesAtom'
+import { steamProfilesState } from '@/atoms/steamProfilesAtom'
 
 export const useSteamProfiles = () => {
   const [steamProfiles, setSteamProfiles] = useRecoilState<any>(steamProfilesState)

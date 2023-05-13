@@ -3,8 +3,8 @@
 import React from 'react'
 import Link from 'next/link'
 import { useRecoilState, useSetRecoilState } from 'recoil'
-import { filterByState } from '../atoms/filterByAtom'
-import { searchUserNameState } from '../atoms/searchUsernameAtom'
+import { filterByState } from '@/atoms/filterByAtom'
+import { searchUserNameState } from '@/atoms/searchUsernameAtom'
 import { useAuth } from '@/context/AuthContext'
 
 export default function TopNav() {

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { filterByState } from '../atoms/filterByAtom'
-import { searchUserNameState } from '../atoms/searchUsernameAtom'
-import { steamProfilesState } from '../atoms/steamProfilesAtom'
+import { filterByState } from '@/atoms/filterByAtom'
+import { searchUserNameState } from '@/atoms/searchUsernameAtom'
+import { steamProfilesState } from '@/atoms/steamProfilesAtom'
 
 export const useFilter = () => {
   const filter = useRecoilValue(filterByState)

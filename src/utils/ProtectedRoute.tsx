@@ -1,15 +1,17 @@
+'use client'
+
 import React from 'react'
 import { useEffect } from 'react'
-import { useAuth } from '../hooks/useAuth'
 import { useRouter } from 'next/router'
+import { useAuth } from '@/context/AuthContext'
 
-export default function ProtectedRoute({ children }) {
-    const { user } = useAuth()
-    const router = useRouter()
+export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth()
+  const router = useRouter()
 
-    useEffect(() => {
-        if (!user) router.push('/')
-    }, [user, router])
+  useEffect(() => {
+    if (!user) router.push('/')
+  }, [user, router])
 
-    return <div>{user && children}</div>
+  return <div>{user && children}</div>
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { timeAgo } from '../utils/timeAgo'
+import { timeAgo } from '@/utils/timeAgo'
 import Image from 'next/image'
 import Link from 'next/link'
 
