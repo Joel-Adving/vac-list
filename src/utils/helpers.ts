@@ -1,12 +1,13 @@
-const API_URL = process.env.NEXT_PUBLIC_STEAM_API_URL
+import { env } from './env'
+
+const { NEXT_PUBLIC_STEAM_API_URL: API_URL } = env
 
 export const getJSON = async function (url: string) {
   try {
     const res = await fetch(url)
-    const data = await res.json()
-    return data
-  } catch (err) {
-    console.log(err)
+    return await res.json()
+  } catch (e) {
+    console.log(e)
   }
 }
 

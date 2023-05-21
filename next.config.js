@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -10,7 +11,8 @@ const nextConfig = {
         protocol: 'http',
         hostname: '**'
       }
-    ]
+    ],
+    minimumCacheTTL: 2592000 // 30 days
   },
   output: 'standalone'
 }
