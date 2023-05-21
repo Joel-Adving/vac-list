@@ -1,7 +1,3 @@
-import { env } from './env'
-
-const { NEXT_PUBLIC_STEAM_API_URL: API_URL } = env
-
 export const getJSON = async function (url: string) {
   try {
     const res = await fetch(url)
@@ -12,16 +8,16 @@ export const getJSON = async function (url: string) {
 }
 
 export const getSteamProfiles = async function (id: string[] | string) {
-  const res = await getJSON(`${API_URL}/profile/${id}`)
+  const res = await getJSON(`/api/profile/${id}`)
   return res.response.players
 }
 
 export const getBanStatus = async function (ids: string[] | string) {
-  const res = await getJSON(`${API_URL}/gamebans/${ids}`)
+  const res = await getJSON(`/api/gamebans/${ids}`)
   return res.players
 }
 
 export const getCsgoStats = async function (id: string[] | string) {
-  const res = await getJSON(`${API_URL}/csgostats/${id}`)
+  const res = await getJSON(`/api/csgostats/${id}`)
   return res
 }
