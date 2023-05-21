@@ -1,7 +1,11 @@
+import axios from 'axios'
+
 export const getJSON = async function (url: string) {
   try {
-    const res = await fetch(url)
-    return await res.json()
+    const res = await axios.get(url)
+    console.log(res)
+    console.log(res.data)
+    return res.data
   } catch (e) {
     console.log(e)
   }
