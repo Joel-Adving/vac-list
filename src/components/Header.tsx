@@ -28,10 +28,10 @@ export default function Header() {
                 width={40}
                 height={40}
                 className="border-r-2 border-highlight w-7 h-7"
-                src={user.photoURL}
+                src={user?.photoURL ?? ''}
                 alt="User profile image"
               />
-              <h3 className="mx-3 text-md text-highlight">{user.name}</h3>
+              <h3 className="mx-3 text-md text-highlight">{user?.name}</h3>
             </div>
             <button className="px-4 py-[3px] text-sm text-white bg-green-bg min-w-max" onClick={() => logout()}>
               Sign Out
