@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { filterByState } from '@/atoms/filterByAtom'
-import { searchUserNameState } from '@/atoms/searchUsernameAtom'
-import { steamProfilesState } from '@/atoms/steamProfilesAtom'
+import { useFilterState } from '@/redux/slices/filterSlice'
+import { useSearchState } from '@/redux/slices/searchSlice'
+import { ProfileType, useProfilesState } from '@/redux/slices/profilesSlice'
 
 export const useFilter = () => {
-  const filter = useRecoilValue(filterByState)
-  const steamProfiles = useRecoilValue(steamProfilesState)
-  const [searchUserName] = useRecoilState(searchUserNameState)
-
-  const [filteredProfiles, setFilteredProfiles] = useState<any[]>([])
+  const [filter] = useFilterState()
+  const [steamProfiles] = useProfilesState()
+  const [searchUserName] = useSearchState()
+  const [filteredProfiles, setFilteredProfiles] = useState<ProfileType[]>([])
 
   useEffect(() => {
     if (!steamProfiles) return
@@ -18,22 +16,20 @@ export const useFilter = () => {
       setFilteredProfiles(steamProfiles)
     }
     if (filter === 'suspects') {
-      setFilteredProfiles(steamProfiles.filter((acc: any) => !acc.VACBanned && acc.NumberOfGameBans < 1))
+      setFilteredProfiles(steamProfiles.filter((acc) => !acc.VACBanned && acc.NumberOfGameBans < 1))
     }
     if (filter === 'banned') {
-      setFilteredProfiles(steamProfiles.filter((acc: any) => acc.VACBanned || acc.NumberOfGameBans > 0))
+      setFilteredProfiles(steamProfiles.filter((acc) => acc.VACBanned || acc.NumberOfGameBans > 0))
     }
     if (filter === 'vac banned') {
-      setFilteredProfiles(steamProfiles.filter((acc: any) => acc.VACBanned))
+      setFilteredProfiles(steamProfiles.filter((acc) => acc.VACBanned))
     }
     if (filter === 'game banned') {
-      setFilteredProfiles(steamProfiles.filter((acc: any) => acc.NumberOfGameBans > 0))
+      setFilteredProfiles(steamProfiles.filter((acc) => acc.NumberOfGameBans > 0))
     }
 
     if (searchUserName) {
-      setFilteredProfiles(
-        steamProfiles.filter((el: any) => el.personaname.toLowerCase().includes(searchUserName.toLowerCase()))
-      )
+      setFilteredProfiles(steamProfiles.filter((el) => el.personaname.toLowerCase().includes(searchUserName.toLowerCase())))
     }
   }, [steamProfiles, filter, searchUserName])
 

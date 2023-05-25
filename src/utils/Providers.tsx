@@ -2,12 +2,13 @@
 
 import AuthContextProvider from '@/context/AuthContext'
 import React from 'react'
-import { RecoilRoot } from 'recoil'
+import { store } from '@/redux/store'
+import { Provider } from 'react-redux'
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <AuthContextProvider>
-      <RecoilRoot>{children}</RecoilRoot>
+      <Provider store={store}>{children}</Provider>
     </AuthContextProvider>
   )
 }

@@ -5,26 +5,31 @@ import { getJSON } from '@/utils/helpers'
 import { setDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore'
 import { db } from '@/firebase/config'
 import Select from 'react-select'
-import { useSetRecoilState } from 'recoil'
-import { steamProfilesState } from '@/atoms/steamProfilesAtom'
 import { getAuth } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
-import { filterByState } from '@/atoms/filterByAtom'
 import { useAuth } from '@/context/AuthContext'
+import { useFilterState } from '@/redux/slices/filterSlice'
+import { useProfilesState } from '@/redux/slices/profilesSlice'
+
+type SuspectType = {
+  value: 'sus' | 'cheater' | 'rageHack'
+  label: 'Suspected cheater' | 'Cheater' | 'Rager hacker'
+} | null
 
 const suspectOptions = [
-  { value: 'sus', label: 'Sussy player' },
+  { value: 'sus', label: 'Suspected cheater' },
+  { value: 'cheater', label: 'Cheater' },
   { value: 'rageHack', label: 'Rager hacker' }
-]
+] as const
 
 export default function Add() {
   const [formInput, setFormInput] = useState('')
-  const [suspectType, setSuspectType] = useState<any>(null)
+  const [suspectType, setSuspectType] = useState<SuspectType>(null)
   const { user, signin } = useAuth()
   const [formError, setFormError] = useState('')
   const [loading, setLoading] = useState(false)
-  const setSteamProfiles = useSetRecoilState(steamProfilesState)
-  const setFilter = useSetRecoilState(filterByState)
+  const [, setSteamProfiles] = useProfilesState()
+  const [, setFilter] = useFilterState()
   const router = useRouter()
 
   const formReset = () => {
@@ -37,7 +42,7 @@ export default function Add() {
     e.preventDefault()
     setFormError('')
     const url = formInput.trim()
-    let id: any
+    let id: string
 
     if (!url.startsWith('https://steamcommunity.com/')) {
       formReset()
@@ -45,10 +50,13 @@ export default function Add() {
       return
     }
 
-    if (url.endsWith('/')) id = url.slice(0, -1).split('/').at(-1)
-    else id = url.split('/').at(-1)
+    if (url.endsWith('/')) {
+      id = url.slice(0, -1).split('/').at(-1) ?? ''
+    } else {
+      id = url.split('/').at(-1) ?? ''
+    }
 
-    if (id > 16 && !Number.isNaN(+id)) {
+    if (id.length > 16 && !Number.isNaN(+id)) {
       setLoading(true)
       const docSnap = await getDoc(doc(db, 'steam-profiles', id))
       if (docSnap.exists()) {
@@ -61,8 +69,8 @@ export default function Add() {
         created: serverTimestamp(),
         suspect_type: suspectType?.value ?? 'sus',
         added_by: {
-          uid: user.uid,
-          email: user.email,
+          uid: user?.uid,
+          email: user?.email,
           photoURL: getAuth().currentUser?.photoURL,
           name: getAuth().currentUser?.displayName
         }
@@ -85,8 +93,8 @@ export default function Add() {
       await setDoc(docRef, {
         created: serverTimestamp(),
         added_by: {
-          uid: user.uid,
-          email: user.email,
+          uid: user?.uid,
+          email: user?.email,
           photoURL: getAuth().currentUser?.photoURL,
           name: getAuth().currentUser?.displayName
         },

@@ -4,21 +4,22 @@ import React from 'react'
 import { timeAgo } from '@/utils/timeAgo'
 import Image from 'next/image'
 import Link from 'next/link'
+import { ProfileType } from '@/redux/slices/profilesSlice'
 
-export default function Card({ profile }: { profile: any }) {
+export default function Card({ profile }: { profile: ProfileType }) {
   return (
     <Link href={`/steam-profile/${profile.steamid}`} passHref>
-      <div className="flex flex-col h-full p-4 shadow-2xl cursor-pointer bg-background sm:flex-row">
+      <div className="flex flex-col h-full p-4 rounded-sm shadow-2xl cursor-pointer bg-background sm:flex-row">
         <Image
           priority
-          className="w-auto h-full min-h-full"
+          className="w-full sm:max-w-[11.5rem] rounded-sm"
           src={profile.avatarfull}
           alt="avatar"
           width={200}
           height={200}
         />
-        <div className="flex flex-col justify-between flex-1 p-2 space-y-5 sm:p-3 sm:space-y-0">
-          <h2 style={{ wordBreak: 'break-all' }} className="mt-1 text-4xl sm:text-2xl sm:mt-0 text-highlight">
+        <div className="flex flex-col justify-between flex-1 p-2 space-y-5 sm:px-5 sm:space-y-0">
+          <h2 style={{ wordBreak: 'break-all' }} className="mt-1 text-xl sm:mt-0 text-highlight">
             {profile.personaname}
           </h2>
           <div className="text-xl sm:text-lg">

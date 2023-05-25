@@ -2,18 +2,15 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { useRecoilState, useSetRecoilState } from 'recoil'
-import { filterByState } from '@/atoms/filterByAtom'
-import { searchUserNameState } from '@/atoms/searchUsernameAtom'
-import { useAuth } from '@/context/AuthContext'
+import { useFilterState } from '@/redux/slices/filterSlice'
+import { useSearchState } from '@/redux/slices/searchSlice'
 
 export default function TopNav() {
-  const { user, signin } = useAuth()
-  const setFilter = useSetRecoilState(filterByState)
-  const [searchUserName, setSearchUserName] = useRecoilState(searchUserNameState)
+  const [_, setFilter] = useFilterState()
+  const [searchUserName, setSearchUserName] = useSearchState()
 
   return (
-    <nav className="flex flex-col justify-between w-full max-w-5xl mx-auto font-semibold shadow-lg md:my-10 md:flex-row text-text-lighter bg-background-light">
+    <nav className="flex flex-col justify-between w-full max-w-5xl mx-auto font-semibold rounded-sm shadow-lg md:my-10 md:flex-row text-text-lighter bg-background-light">
       <div className="flex flex-col md:items-center md:flex-row">
         <button
           onClick={() => setFilter('all')}

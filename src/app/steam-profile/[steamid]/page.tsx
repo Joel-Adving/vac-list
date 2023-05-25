@@ -7,20 +7,19 @@ import { db } from '@/firebase/config'
 import { timeAgo } from '@/utils/timeAgo'
 import countries from 'i18n-iso-countries'
 import Modal from '@/components/Modal'
-import { steamProfilesState } from '@/atoms/steamProfilesAtom'
-import { filterByState } from '@/atoms/filterByAtom'
-import { useSetRecoilState } from 'recoil'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
+import { useFilterState } from '@/redux/slices/filterSlice'
+import { ProfileType, useProfilesState } from '@/redux/slices/profilesSlice'
 
 export default function SteamProfile({ params }: { params: { steamid: string } }) {
   const router = useRouter()
   const { steamid } = params
-  const [profile, setProfile] = useState<any>(null)
+  const [profile, setProfile] = useState<ProfileType | null>(null)
   const [showModal, setShowModal] = useState(false)
-  const setSteamProfiles = useSetRecoilState(steamProfilesState)
-  const setFilter = useSetRecoilState<any>(filterByState)
+  const [, setSteamProfiles] = useProfilesState()
+  const [_, setFilter] = useFilterState()
   const { user } = useAuth()
   const [showDel, setshowDel] = useState(false)
 
@@ -30,7 +29,7 @@ export default function SteamProfile({ params }: { params: { steamid: string } }
       const docRef = doc(db, 'steam-profiles', steamid as string)
       const docSnap = await getDoc(docRef)
       if (!docSnap.exists()) return
-      const dbProfile: any = { ...docSnap.data(), id: docSnap.id }
+      const dbProfile = { ...docSnap.data(), id: docSnap.id } as ProfileType
       const steamProfiles = await getSteamProfiles(steamid)
       const banStatus = await getBanStatus(steamid)
       const csgoStats = await getCsgoStats(steamid)
@@ -130,10 +129,6 @@ export default function SteamProfile({ params }: { params: { steamid: string } }
             )}
             {profile.playerstats && (
               <>
-                {/* <p>
-                                    <span className="text-zinc-100">Total playtime: </span>
-                                    {Math.ceil(profile?.playerstats?.stats[2]?.value / 60 / 60)} hours
-                                </p> */}
                 <p>
                   <span className="text-zinc-100">csgo achivements: </span>
                   {profile?.playerstats?.achievements.length} of 167
@@ -144,10 +139,7 @@ export default function SteamProfile({ params }: { params: { steamid: string } }
                 </p>
                 <p>
                   <span className="text-zinc-100">HS: </span>
-                  {(
-                    ((profile?.playerstats?.stats[25]?.value as any) / profile?.playerstats?.stats[0]?.value) as any
-                  ).toFixed(2) * 100}
-                  %
+                  {(100 * (profile?.playerstats?.stats[25]?.value / profile?.playerstats?.stats[0]?.value)).toFixed(2)}%
                 </p>
               </>
             )}

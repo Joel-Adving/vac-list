@@ -6,11 +6,18 @@ import { auth } from '@/firebase/config'
 import { useCallback } from 'react'
 import { useContext } from 'react'
 
+type UserType = {
+  uid: string
+  email: string | null
+  name?: string | null
+  photoURL?: string | null
+}
+
 type AuthContextType = {
-  user: any
+  user: UserType | null
   signin: () => void
   logout: () => void
-  error: any
+  error: string | null
   isPending: boolean
 }
 
@@ -19,7 +26,7 @@ export const AuthContext = createContext({} as AuthContextType)
 export const useAuth = () => useContext(AuthContext)
 
 export default function AuthContextProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<UserType | null>(null)
   const [loading, setLoading] = useState(true)
   const [isPending, setisPending] = useState(false)
   const [error, setError] = useState(null)

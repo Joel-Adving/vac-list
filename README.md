@@ -6,5 +6,4 @@ https://vac-tracker.vercel.app/
 
 ## Architecture / Tech Stack
 
-Next.JS, Firebase, Recoil, Tailwind CSS
-
+Next.JS, Redux, Firebase, Tailwind CSS
