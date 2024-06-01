@@ -3,10 +3,11 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useAuth } from '@/context/AuthContext'
+import { useUser } from '@/hooks/useUser'
+import { signIn, signOut } from '@/libs/firebase/auth'
 
 export default function Header() {
-  const { user, signin, logout } = useAuth()
+  const user = useUser()
 
   return (
     <header className="p-6 bg-background-dark">
@@ -33,12 +34,12 @@ export default function Header() {
               />
               <h3 className="mx-3 text-md text-highlight">{user?.name}</h3>
             </div>
-            <button className="px-4 py-[3px] text-sm text-white bg-green-bg min-w-max" onClick={() => logout()}>
+            <button className="px-4 py-[3px] text-sm text-white bg-green-bg min-w-max" onClick={() => signOut()}>
               Sign Out
             </button>
           </div>
         ) : (
-          <button className="px-3 py-[3px] text-sm text-white bg-green-bg" onClick={() => signin()}>
+          <button className="px-3 py-[3px] text-sm text-white bg-green-bg" onClick={() => signIn()}>
             Sign in
           </button>
         )}

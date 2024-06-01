@@ -1,14 +1,13 @@
 'use client'
 
 import { useFilter } from '@/hooks/useFilter'
-import { useSteamProfiles } from '@/hooks/useSteamProfiles'
 import Card from './Card'
-import { useFilterState } from '@/redux/slices/filterSlice'
+import { useFilterState } from '@/libs/redux/slices/filterSlice'
+import { useGetFullProfilesQuery } from '@/libs/redux/query/nextApi'
 
 export default function Profiles() {
-  const { loading } = useSteamProfiles()
+  const { isLoading } = useGetFullProfilesQuery()
   const [filter] = useFilterState()
-
   const { filteredProfiles } = useFilter()
 
   return (
@@ -18,14 +17,14 @@ export default function Profiles() {
           {filter !== 'all' &&
             filteredProfiles
               ?.slice()
-              ?.sort((a, b) => a?.DaysSinceLastBan - b?.DaysSinceLastBan)
-              ?.map((profile) => <Card key={profile.steamid} profile={profile} />)}
+              ?.sort((a, b) => a?.days_since_last_ban - b?.days_since_last_ban)
+              ?.map((profile) => <Card key={profile.steam_id} profile={profile} />)}
 
-          {filter === 'all' && filteredProfiles.map((profile) => <Card key={profile.steamid} profile={profile} />)}
+          {filter === 'all' && filteredProfiles.map((profile) => <Card key={profile.steam_id} profile={profile} />)}
         </section>
       )}
 
-      {loading && (
+      {isLoading && (
         <div className="flex flex-col gap-3 pt-3 sm:grid md:pt-0 sm:gap-3 responsive-grid">
           {Array.from(Array(10).keys()).map((i) => (
             <div

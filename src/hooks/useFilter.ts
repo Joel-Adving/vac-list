@@ -1,37 +1,35 @@
-import { useEffect, useState } from 'react'
-import { useFilterState } from '@/redux/slices/filterSlice'
-import { useSearchState } from '@/redux/slices/searchSlice'
-import { ProfileType, useProfilesState } from '@/redux/slices/profilesSlice'
+import { useMemo } from 'react'
+import { useFilterState } from '@/libs/redux/slices/filterSlice'
+import { useSearchState } from '@/libs/redux/slices/searchSlice'
+import { useGetFullProfilesQuery } from '@/libs/redux/query/nextApi'
 
 export const useFilter = () => {
+  const { data: steamProfiles } = useGetFullProfilesQuery()
   const [filter] = useFilterState()
-  const [steamProfiles] = useProfilesState()
   const [searchUserName] = useSearchState()
-  const [filteredProfiles, setFilteredProfiles] = useState<ProfileType[]>([])
 
-  useEffect(() => {
-    if (!steamProfiles) return
-
-    if (filter === 'all') {
-      setFilteredProfiles(steamProfiles)
+  const filteredProfiles = useMemo(() => {
+    if (!steamProfiles) {
+      return []
     }
-    if (filter === 'suspects') {
-      setFilteredProfiles(steamProfiles.filter((acc) => !acc.VACBanned && acc.NumberOfGameBans < 1))
-    }
-    if (filter === 'banned') {
-      setFilteredProfiles(steamProfiles.filter((acc) => acc.VACBanned || acc.NumberOfGameBans > 0))
-    }
-    if (filter === 'vac banned') {
-      setFilteredProfiles(steamProfiles.filter((acc) => acc.VACBanned))
-    }
-    if (filter === 'game banned') {
-      setFilteredProfiles(steamProfiles.filter((acc) => acc.NumberOfGameBans > 0))
-    }
-
     if (searchUserName) {
-      setFilteredProfiles(steamProfiles.filter((el) => el.personaname.toLowerCase().includes(searchUserName.toLowerCase())))
+      return steamProfiles.filter((el) => el.persona_name.toLowerCase().includes(searchUserName.toLowerCase()))
     }
-  }, [steamProfiles, filter, searchUserName])
+    switch (filter) {
+      case 'all':
+        return steamProfiles
+      case 'suspects':
+        return steamProfiles.filter((acc) => !acc.vac_banned && acc.number_of_game_bans < 1)
+      case 'banned':
+        return steamProfiles.filter((acc) => acc.vac_banned || acc.number_of_game_bans > 0)
+      case 'vac banned':
+        return steamProfiles.filter((acc) => acc.vac_banned)
+      case 'game banned':
+        return steamProfiles.filter((acc) => acc.number_of_game_bans > 0)
+      default:
+        return steamProfiles
+    }
+  }, [steamProfiles, searchUserName, filter])
 
   return { filteredProfiles }
 }

@@ -3,15 +3,15 @@
 import { deleteDoc, doc, getDoc } from 'firebase/firestore'
 import { useState, useEffect } from 'react'
 import { getBanStatus, getCsgoStats, getSteamProfiles } from '@/utils/helpers'
-import { db } from '@/firebase/config'
+import { db } from '@/libs/firebase/config'
 import { timeAgo } from '@/utils/timeAgo'
 import countries from 'i18n-iso-countries'
 import Modal from '@/components/Modal'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/context/AuthContext'
-import { useFilterState } from '@/redux/slices/filterSlice'
-import { ProfileType, useProfilesState } from '@/redux/slices/profilesSlice'
+import { useFilterState } from '@/libs/redux/slices/filterSlice'
+import { ProfileType, useProfilesState } from '@/libs/redux/slices/profilesSlice'
+import { useUser } from '@/hooks/useUser'
 
 export default function SteamProfile({ params }: { params: { steamid: string } }) {
   const router = useRouter()
@@ -20,8 +20,8 @@ export default function SteamProfile({ params }: { params: { steamid: string } }
   const [showModal, setShowModal] = useState(false)
   const [, setSteamProfiles] = useProfilesState()
   const [_, setFilter] = useFilterState()
-  const { user } = useAuth()
   const [showDel, setshowDel] = useState(false)
+  const user = useUser()
 
   useEffect(() => {
     if (!steamid) return
@@ -114,7 +114,9 @@ export default function SteamProfile({ params }: { params: { steamid: string } }
                 alt="User profile image"
               />
             </div>
-            <p className="text-sm text-zinc-500">Submitted {timeAgo.format(new Date(profile.created.seconds * 1000))}</p>
+            <p className="text-sm text-zinc-500">
+              Submitted {timeAgo.format(new Date(profile.created.seconds * 1000))}
+            </p>
           </div>
         </div>
       )}

@@ -3,13 +3,14 @@
 import React, { useState } from 'react'
 import { getJSON } from '@/utils/helpers'
 import { setDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore'
-import { db } from '@/firebase/config'
+import { db } from '@/libs/firebase/config'
 import Select from 'react-select'
 import { getAuth } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/context/AuthContext'
-import { useFilterState } from '@/redux/slices/filterSlice'
-import { useProfilesState } from '@/redux/slices/profilesSlice'
+import { useFilterState } from '@/libs/redux/slices/filterSlice'
+import { useProfilesState } from '@/libs/redux/slices/profilesSlice'
+import { useUser } from '@/hooks/useUser'
+import { signIn } from '@/libs/firebase/auth'
 
 type SuspectType = {
   value: 'sus' | 'cheater' | 'rageHack'
@@ -25,7 +26,7 @@ const suspectOptions = [
 export default function Add() {
   const [formInput, setFormInput] = useState('')
   const [suspectType, setSuspectType] = useState<SuspectType>(null)
-  const { user, signin } = useAuth()
+  const user = useUser()
   const [formError, setFormError] = useState('')
   const [loading, setLoading] = useState(false)
   const [, setSteamProfiles] = useProfilesState()
@@ -109,7 +110,10 @@ export default function Add() {
 
   return user ? (
     <div className="grid place-content-center">
-      <form className="flex flex-col w-screen max-w-xl mt-10 shadow p-7 text-text bg-background" onSubmit={handleSubmit}>
+      <form
+        className="flex flex-col w-screen max-w-xl mt-10 shadow p-7 text-text bg-background"
+        onSubmit={handleSubmit}
+      >
         <h1 className="mb-6 text-3xl font-semibold">Add Suspected Cheater</h1>
         <h3>Steam profile URL</h3>
 
@@ -143,7 +147,7 @@ export default function Add() {
   ) : (
     <div className="grid place-content-center h-[70vh] gap-6">
       <h1 className="text-3xl text-white ">Sign in to add a suspect</h1>
-      <button className="px-6 py-2 mx-auto text-sm text-white bg-green-bg w-fit" onClick={() => signin()}>
+      <button className="px-6 py-2 mx-auto text-sm text-white bg-green-bg w-fit" onClick={() => signIn()}>
         Sign in
       </button>
     </div>

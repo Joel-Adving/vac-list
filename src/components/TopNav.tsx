@@ -2,8 +2,8 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { useFilterState } from '@/redux/slices/filterSlice'
-import { useSearchState } from '@/redux/slices/searchSlice'
+import { useFilterState } from '@/libs/redux/slices/filterSlice'
+import { useSearchState } from '@/libs/redux/slices/searchSlice'
 
 export default function TopNav() {
   const [_, setFilter] = useFilterState()
@@ -44,7 +44,7 @@ export default function TopNav() {
         </button>
 
         <Link
-          href="/add-suspect"
+          href="/add"
           className="flex items-center min-h-full px-2 py-2 font-normal text-sky-200 bg-sky-700 md:py-0 drop-shadow hover:bg-sky-600"
         >
           Add Suspect

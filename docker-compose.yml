@@ -1,0 +1,11 @@
+services:
+  sqlite:
+    image: sqlite:latest
+    volumes:
+      - sqlite-data:/mydatabase
+    ports:
+      - '5432:5432'
+    restart: unless-stopped
+
+volumes:
+  sqlite-data:

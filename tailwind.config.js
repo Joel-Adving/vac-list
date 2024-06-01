@@ -1,6 +1,5 @@
-module.exports = {
-  content: ['./src/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
-
+const tailwindcssConfig = {
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -19,3 +18,5 @@ module.exports = {
   },
   plugins: []
 }
+
+export default tailwindcssConfig
