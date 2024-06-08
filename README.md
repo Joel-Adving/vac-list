@@ -4,6 +4,6 @@ VAC Tracker is a app where you can add cheaters or suspected cheaters that you h
 
 https://vac.oki.gg/
 
-## Architecture / Tech Stack
+### Stack
 
 Next.JS, Typescript, pocketbase, Tailwind CSS
