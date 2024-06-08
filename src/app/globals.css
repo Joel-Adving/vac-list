@@ -27,12 +27,12 @@ a {
 }
 
 body {
-  background: linear-gradient(#203355, var(--color-background));
+  background: #203355;
   min-height: 100vh;
 }
 
 .responsive-grid {
-  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   width: 100%;
 }
 

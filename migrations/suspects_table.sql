@@ -1,4 +1,4 @@
--- migrations/profiles_table.sql
+-- migrations/suspects_table.sql
 CREATE TABLE IF NOT EXISTS suspects (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     steam_id TEXT,

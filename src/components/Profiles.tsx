@@ -1,48 +1,44 @@
 'use client'
-
-import { useFilter } from '@/hooks/useFilter'
 import Card from './Card'
-import { useFilterState } from '@/libs/redux/slices/filterSlice'
-import { useGetFullProfilesQuery } from '@/libs/redux/query/nextApi'
+import { SteamProfileSuspectType } from '@/types'
+import { useMemo } from 'react'
+import { useSearchParams } from 'next/navigation'
 
-export default function Profiles() {
-  const { isLoading } = useGetFullProfilesQuery()
-  const [filter] = useFilterState()
-  const { filteredProfiles } = useFilter()
+export default function Profiles({ profiles }: { profiles: SteamProfileSuspectType[] }) {
+  const searchParams = useSearchParams()
+  const search = searchParams.get('search')
+  const filter = searchParams.get('filter')
+
+  const filteredProfiles = useMemo(() => {
+    let _profiles = profiles.slice().sort((a, b) => b.created.seconds - a.created.seconds)
+    switch (filter) {
+      case '':
+        break
+      case 'suspects':
+        _profiles = _profiles.filter((acc) => !acc.vac_banned && acc.number_of_game_bans < 1)
+        break
+      case 'banned':
+        _profiles = _profiles.filter((acc) => acc.vac_banned || acc.number_of_game_bans > 0)
+        break
+      case 'vac-banned':
+        _profiles = _profiles.filter((acc) => acc.vac_banned)
+        break
+      case 'game-banned':
+        _profiles = _profiles.filter((acc) => acc.number_of_game_bans > 0)
+    }
+    if (search) {
+      _profiles = _profiles.filter((el) => el.persona_name.toLowerCase().includes(search.toLowerCase()))
+    }
+    return _profiles
+  }, [profiles, search, filter])
 
   return (
-    <div className="max-w-5xl px-3 mx-auto my-1 md:my-10 text-text-lighter lg:px-0">
-      {filteredProfiles && (
-        <section className="flex flex-col gap-3 pt-3 sm:grid md:pt-0 sm:gap-3 responsive-grid">
-          {filter !== 'all' &&
-            filteredProfiles
-              ?.slice()
-              ?.sort((a, b) => a?.days_since_last_ban - b?.days_since_last_ban)
-              ?.map((profile) => <Card key={profile.steam_id} profile={profile} />)}
-
-          {filter === 'all' && filteredProfiles.map((profile) => <Card key={profile.steam_id} profile={profile} />)}
-        </section>
-      )}
-
-      {isLoading && (
-        <div className="flex flex-col gap-3 pt-3 sm:grid md:pt-0 sm:gap-3 responsive-grid">
-          {Array.from(Array(10).keys()).map((i) => (
-            <div
-              key={i}
-              className="flex flex-col sm:flex-row gap-5 p-5 sm:h-[13.5rem] h-[25rem] bg-background rounded-sm animate-pulse"
-            >
-              <div className="bg-gray-700 rounded-sm w-full sm:max-w-[11.5rem] h-full"></div>
-              <div className="flex flex-col justify-between w-full gap-6 sm:gap-0">
-                <div className="w-3/5 h-6 mt-2 bg-gray-700 rounded-sm"></div>
-                <div className="flex justify-between mb-2">
-                  <div className="w-2/5 h-4 bg-gray-700 rounded-sm"></div>
-                  <div className="w-10 h-4 mr-4 bg-gray-700 rounded-sm"></div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+    <div className="pb-5 mx-auto max-w-7xl text-text-lighter">
+      <section className="flex flex-col items-center gap-3 sm:grid responsive-grid">
+        {filteredProfiles?.map((profile) => (
+          <Card key={profile.steam_id} profile={profile} />
+        ))}
+      </section>
     </div>
   )
 }

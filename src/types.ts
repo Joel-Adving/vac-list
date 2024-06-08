@@ -45,13 +45,13 @@ type PlayerStats = {
   }[]
 }
 
-export type FullProfileType = {
+export type SteamProfile = {
   id: number
   steam_id: string
-  suspect_type: string
   persona_name: string
   profile_state: number
   profile_url: string
+  loccountry_code: string
   avatar: string
   avatar_medium: string
   avatar_full: string
@@ -67,10 +67,10 @@ export type FullProfileType = {
   economy_ban: string
   player_stats: PlayerStats
   community_visibility_state: number
-  added_by: AddedBy
   time_created: number
-  created: Created
 }
+
+export type SteamProfileSuspectType = SteamProfile & SuspectType
 
 export type MergedProfileType = {
   added_by: AddedBy

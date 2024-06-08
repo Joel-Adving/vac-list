@@ -1,11 +1,11 @@
--- migrations/profiles_table.sql
-CREATE TABLE IF NOT EXISTS profiles (
+-- migrations/steam_profiles_table.sql
+CREATE TABLE IF NOT EXISTS steam_profiles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     steam_id TEXT,
-    suspect_type TEXT,
     persona_name TEXT,
     profile_state INTEGER,
     profile_url TEXT,
+    loccountry_code TEXT,
     avatar TEXT,
     avatar_medium TEXT,
     avatar_full TEXT,
@@ -21,7 +21,5 @@ CREATE TABLE IF NOT EXISTS profiles (
     economy_ban TEXT,
     player_stats JSON,
     community_visibility_state INTEGER,
-    added_by JSON,
-    time_created INTEGER,
-    created JSON
+    time_created INTEGER
 );

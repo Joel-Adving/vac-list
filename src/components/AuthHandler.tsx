@@ -2,25 +2,23 @@
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { useEffect } from 'react'
 import { auth } from '@/libs/firebase/config'
-import { setUser } from '@/libs/redux/slices/userSlice'
-import { useDispatch } from 'react-redux'
+import { useAtom } from 'jotai'
+import { userAtom } from '@/store'
 
 export default function AuthHandler() {
-  const dispatch = useDispatch()
+  const [_, setUser] = useAtom(userAtom)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        dispatch(
-          setUser({
-            uid: user.uid,
-            email: user.email,
-            photoURL: getAuth().currentUser?.photoURL ?? '',
-            name: getAuth().currentUser?.displayName ?? ''
-          })
-        )
+        setUser({
+          uid: user.uid,
+          email: user.email,
+          photoURL: getAuth().currentUser?.photoURL ?? '',
+          name: getAuth().currentUser?.displayName ?? ''
+        })
       } else {
-        dispatch(setUser(null))
+        setUser(null)
       }
     })
 

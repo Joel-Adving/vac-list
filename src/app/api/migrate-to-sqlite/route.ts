@@ -1,33 +1,27 @@
 import { query, collection, orderBy, onSnapshot } from 'firebase/firestore'
 import { db } from '@/libs/firebase/config'
 import { FirestoreProfileType, SuspectType } from '@/types'
-import { mapFirestoreProfileToSqlite } from '@/utils/dataMappers'
+import { mapFirestoreSuspectToSqlite } from '@/utils/dataMappers'
 import { sqlite } from '@/libs/sqlite'
 import { insertSuspect } from '@/libs/sqlite/queries'
 
-export async function GET() {
+export async function GET(request: Request) {
+  const secret = new URLSearchParams(request.url).get('secret')
+  if (secret !== process.env.SECRET) {
+    return new Response('Unauthorized', { status: 401 })
+  }
+
   try {
     const profiles: FirestoreProfileType[] | null = await new Promise((resolve) => {
       onSnapshot(query(collection(db, `/steam-profiles/`), orderBy('created', 'desc')), async (snapShot) => {
         if (snapShot.empty) {
           resolve(null)
         }
-
         const docs: any[] = []
         snapShot.forEach((doc) => {
           docs.push({ ...doc.data(), id: doc.id })
         })
-
         resolve(docs)
-
-        // const steamProfiles = await getSteamProfiles(docs.map((el) => el.id))
-        // const banStatus = await getBanStatus(docs.map((el) => el.id))
-        // const merged = docs.map((el, i) => ({
-        //   ...el,
-        //   ...steamProfiles.find((el: any) => el.steamid === docs[i].id),
-        //   ...banStatus.find((el: any) => el.SteamId === docs[i].id)
-        // }))
-        // resolve(merged)
       })
     })
 
@@ -35,7 +29,7 @@ export async function GET() {
       return new Response('No profiles found', { status: 404 })
     }
 
-    const suspects: SuspectType[] = profiles.map(mapFirestoreProfileToSqlite)
+    const suspects: SuspectType[] = profiles.map(mapFirestoreSuspectToSqlite)
 
     try {
       await sqlite.exec('BEGIN TRANSACTION')

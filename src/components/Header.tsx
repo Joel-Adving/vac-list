@@ -1,5 +1,4 @@
 'use client'
-
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -10,19 +9,19 @@ export default function Header() {
   const user = useUser()
 
   return (
-    <header className="p-6 bg-background-dark">
-      <nav className="flex items-center justify-between w-full max-w-5xl mx-auto ">
-        <div>
-          <Link href="/" passHref>
-            <h2 className="text-2xl font-bold cursor-pointer text-text">VAC TRACKER</h2>
+    <header className="p-2 px-4 bg-background-dark">
+      <nav className="flex items-center justify-between w-full mx-auto max-w-7xl ">
+        <div className="flex flex-col">
+          <Link href="/" className="text-xl font-bold cursor-pointer text-text">
+            VAC TRACKER
           </Link>
-          <a className="text-highlight" href="https://steamcommunity.com/id/jjooeell11">
+          <Link className="text-sm text-highlight" href="https://steamcommunity.com/id/jjooeell11">
             created by Oki
-          </a>
+          </Link>
         </div>
 
         {user ? (
-          <div className="flex flex-col sm:flex-row">
+          <div className="flex flex-col overflow-hidden rounded-sm sm:flex-row">
             <div className="flex items-center bg-background">
               <Image
                 priority

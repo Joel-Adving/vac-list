@@ -1,4 +1,4 @@
-import { getProfiles, getSuspects } from '@/libs/sqlite/queries'
+import { getSuspects } from '@/libs/sqlite/queries'
 
 export async function GET(request: Request) {
   try {

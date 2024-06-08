@@ -1,71 +1,16 @@
-'use client'
-
-import { deleteDoc, doc, getDoc } from 'firebase/firestore'
-import { useState, useEffect } from 'react'
-import { getBanStatus, getCsgoStats, getSteamProfiles } from '@/utils/helpers'
-import { db } from '@/libs/firebase/config'
 import { timeAgo } from '@/utils/timeAgo'
 import countries from 'i18n-iso-countries'
-import Modal from '@/components/Modal'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { useFilterState } from '@/libs/redux/slices/filterSlice'
-import { ProfileType, useProfilesState } from '@/libs/redux/slices/profilesSlice'
-import { useUser } from '@/hooks/useUser'
+import RemoveProfile from './RemoveProfile'
+import { api } from '@/services/api'
 
-export default function SteamProfile({ params }: { params: { steamid: string } }) {
-  const router = useRouter()
-  const { steamid } = params
-  const [profile, setProfile] = useState<ProfileType | null>(null)
-  const [showModal, setShowModal] = useState(false)
-  const [, setSteamProfiles] = useProfilesState()
-  const [_, setFilter] = useFilterState()
-  const [showDel, setshowDel] = useState(false)
-  const user = useUser()
+export const revalidate = 3600
 
-  useEffect(() => {
-    if (!steamid) return
-    const getProfile = async () => {
-      const docRef = doc(db, 'steam-profiles', steamid as string)
-      const docSnap = await getDoc(docRef)
-      if (!docSnap.exists()) return
-      const dbProfile = { ...docSnap.data(), id: docSnap.id } as ProfileType
-      const steamProfiles = await getSteamProfiles(steamid)
-      const banStatus = await getBanStatus(steamid)
-      const csgoStats = await getCsgoStats(steamid)
-
-      const merged = {
-        ...dbProfile,
-        ...csgoStats,
-        ...steamProfiles[0],
-        ...banStatus[0]
-      }
-      setProfile(merged)
-      setshowDel(user?.uid === dbProfile.added_by.uid || user?.uid === 'ZwA7YpCdqmNa7N5bozjhAjUiJMC2')
-    }
-    getProfile()
-  }, [steamid, user])
-
-  const handleDelete = async () => {
-    if (!showDel) return
-    const docRef = doc(db, `/steam-profiles/${steamid}`)
-    await deleteDoc(docRef)
-    setShowModal(!showModal)
-    setSteamProfiles([])
-    setFilter('all')
-    router.push('/')
-  }
+export default async function SteamProfile({ params }: { params: { steamid: string } }) {
+  const profile = await api.getProfile(params.steamid)
 
   return (
-    <div className="flex flex-col w-full max-w-5xl min-h-screen p-4 mx-auto bg-gray-800 text-stone-400">
-      {showModal && (
-        <Modal
-          text={'Are you sure you want to remove the suspect?'}
-          showModal={showModal}
-          setShowModal={setShowModal}
-          handleDelete={handleDelete}
-        />
-      )}
+    <div className="flex flex-col w-full min-h-[calc(100dvh-3.5rem)] p-4 mx-auto bg-gray-800 max-w-7xl text-stone-400">
       {profile && (
         <div className="flex flex-col gap-3 md:flex-row max-w">
           <div className="flex flex-col flex-grow mt-1 ml-1 sm:p-1.5 sm:flex-row  max-w-[655px]">
@@ -74,15 +19,14 @@ export default function SteamProfile({ params }: { params: { steamid: string } }
               height={150}
               priority
               className="border-[2px] border-stone-500"
-              src={profile.avatarfull}
+              src={profile.avatar_full}
               alt="avatar"
             />
             <div className="flex flex-col sm:ml-5">
               <div>
-                <h2 className="my-5 mr-3 text-2xl sm:my-0 sm:mt-1 text-zinc-100">{profile.personaname}</h2>
+                <h2 className="my-5 mr-3 text-2xl sm:my-0 sm:mt-1 text-zinc-100">{profile.persona_name}</h2>
                 <div className="flex items-center text-sm ">
-                  <p>{profile?.realname ?? ''}</p>
-                  {profile.loccountrycode && (
+                  {profile?.loccountry_code && (
                     <>
                       <Image
                         priority
@@ -90,32 +34,32 @@ export default function SteamProfile({ params }: { params: { steamid: string } }
                         height={12}
                         className="h-3 mr-1 mt-[1.5x]"
                         alt="United States"
-                        src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${profile.loccountrycode}.svg`}
+                        src={`http://purecatamphetamine.github.io/country-flag-icons/3x2/${profile?.loccountry_code}.svg`}
                       />
-                      <p> {countries.getName(profile.loccountrycode, 'en')}</p>
+                      <p> {countries.getName(profile?.loccountry_code, 'en')}</p>
                     </>
                   )}
                 </div>
               </div>
-              <a href={profile.profileurl} className="text-sm break-words sm:mt-11">
-                {profile.profileurl}
+              <a href={profile.profile_url} className="text-sm break-words sm:mt-11">
+                {profile.profile_url}
               </a>
             </div>
           </div>
           <div className="flex items-center flex-grow max-w-sm pl-1 mt-1 md:pt-4 md:items-start md:flex-col text-zinc-100 ">
             <div className="flex items-center md:mb-3 max-w-max">
-              <h3 className="mr-2 text-md">{profile.added_by.name.split(' ')[0]}</h3>
+              <h3 className="mr-2 text-md">{profile.added_by?.name?.split(' ')[0]}</h3>
               <Image
                 priority
                 width={36}
                 height={36}
                 className="w-9 h-9 rounded-full border-2 p-[1px] border-red-500 mr-2"
-                src={profile.added_by.photoURL}
+                src={profile.added_by?.photoURL}
                 alt="User profile image"
               />
             </div>
             <p className="text-sm text-zinc-500">
-              Submitted {timeAgo.format(new Date(profile.created.seconds * 1000))}
+              Submitted {timeAgo.format(new Date(profile.created?.seconds * 1000))}
             </p>
           </div>
         </div>
@@ -123,25 +67,24 @@ export default function SteamProfile({ params }: { params: { steamid: string } }
       {profile && (
         <div className="flex flex-col-reverse gap-3 mt-7 sm:flex-row">
           <div className="flex flex-col flex-grow gap-2 p-4 rounded bg-background-dark">
-            {profile.timecreated && (
+            {profile.time_created && (
               <p>
                 <span className="text-zinc-100">Account created: </span>
-                {profile.timecreated && timeAgo.format(new Date(profile?.timecreated * 1000))}
+                {profile.time_created && timeAgo.format(new Date(profile?.time_created * 1000))}
               </p>
             )}
-            {profile.playerstats && (
+            {profile.player_stats && (
               <>
                 <p>
-                  <span className="text-zinc-100">csgo achivements: </span>
-                  {profile?.playerstats?.achievements.length} of 167
+                  <span className="text-zinc-100">K/D: </span>
+                  {(profile.player_stats?.stats?.[0]?.value / profile.player_stats?.stats?.[1]?.value).toFixed(2)}
                 </p>
                 <p>
-                  <span className="text-zinc-100">KD: </span>
-                  {(profile?.playerstats?.stats[0]?.value / profile?.playerstats?.stats[1]?.value).toFixed(2)}
-                </p>
-                <p>
-                  <span className="text-zinc-100">HS: </span>
-                  {(100 * (profile?.playerstats?.stats[25]?.value / profile?.playerstats?.stats[0]?.value)).toFixed(2)}%
+                  <span className="text-zinc-100">HS rate: </span>
+                  {(100 * (profile.player_stats?.stats?.[25]?.value / profile.player_stats?.stats?.[0]?.value)).toFixed(
+                    2
+                  )}
+                  %
                 </p>
               </>
             )}
@@ -151,24 +94,19 @@ export default function SteamProfile({ params }: { params: { steamid: string } }
               {profile.suspect_type === 'sus' ? 'Very suspicious' : 'Rage hacker'}
             </p>
 
-            {showDel && (
-              <button
-                className="p-2 mt-3 text-zinc-100 border-[1px] border-zinc-100"
-                onClick={() => setShowModal(!showModal)}
-              >
-                Remove Suspect
-              </button>
-            )}
+            <RemoveProfile steamId={profile.steam_id} />
           </div>
           <div className="flex flex-col flex-grow max-w-xs min-w-full gap-2 p-5 rounded sm:min-w-0 bg-background-dark">
             <div>
-              {profile.VACBanned && <p className="text-red-500 ">VAC BANNED</p>}
-              {profile.NumberOfGameBans > 0 && <p className="text-red-500">GAME BANNED</p>}
-              {profile.DaysSinceLastBan > 0 && <p className="text-red-500">{profile.DaysSinceLastBan} days ago</p>}
+              {profile.vac_banned && <p className="text-red-500 ">VAC BANNED</p>}
+              {profile.number_of_game_bans > 0 && <p className="text-red-500">GAME BANNED</p>}
+              {profile.days_since_last_ban > 0 && (
+                <p className="text-red-500">{profile.days_since_last_ban} days ago</p>
+              )}
             </div>
-            <p>Number of VAC bans: {profile.NumberOfVACBans}</p>
-            <p>Number of game bans: {profile.NumberOfGameBans}</p>
-            <p>{profile.DaysSinceLastBan ? '' : 'Not'} community banned</p>
+            <p>Number of VAC bans: {profile.number_of_vac_bans}</p>
+            <p>Number of game bans: {profile.number_of_game_bans}</p>
+            {profile.community_banned && <p>community banned</p>}
           </div>
         </div>
       )}

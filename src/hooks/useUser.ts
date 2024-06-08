@@ -1,6 +1,6 @@
-import { RootState } from '@/libs/redux/store'
-import { useSelector } from 'react-redux'
+import { userAtom } from '@/store'
+import { useAtom } from 'jotai'
 
 export function useUser() {
-  return useSelector((state: RootState) => state.user.user)
+  return useAtom(userAtom)[0]
 }

@@ -6,4 +6,4 @@ https://vac.oki.gg/
 
 ## Architecture / Tech Stack
 
-Next.JS, Redux, Firebase, Tailwind CSS
+Next.JS, typescript, sqlite, Tailwind CSS

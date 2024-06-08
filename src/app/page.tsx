@@ -1,11 +1,16 @@
+import FilterBar from '@/components/FilterBar'
 import Profiles from '@/components/Profiles'
-import TopNav from '@/components/TopNav'
+import { api } from '@/services/api'
 
-export default function Home() {
+export const revalidate = 3600
+
+export default async function Home() {
+  const profiles = await api.getProfiles()
+
   return (
-    <>
-      <TopNav />
-      <Profiles />
-    </>
+    <main className="px-4">
+      <FilterBar />
+      <Profiles profiles={profiles} />
+    </main>
   )
 }
