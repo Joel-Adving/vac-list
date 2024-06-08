@@ -1,11 +1,23 @@
 services:
-  sqlite:
-    image: sqlite:latest
-    volumes:
-      - sqlite-data:/mydatabase
-    ports:
-      - '5432:5432'
+  nextjs:
     restart: unless-stopped
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - pocketbase
+
+  pocketbase:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - pb_data:/pb/pb_data
+    ports:
+      - '8090:8090'
 
 volumes:
-  sqlite-data:
+  pb_data:
